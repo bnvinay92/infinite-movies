@@ -1,0 +1,22 @@
+apply plugin: 'pl.droidsonroids.pitest'
+
+pitest {
+  pitestVersion = "1.2.4"
+  targetClasses = [
+    'com.github.bnvinay92.*',
+  ]
+  excludedClasses = [
+    '**AutoValue_*',
+    '**Fragment*',
+    '**_Factory*',
+    '**_Provide*Factory*',
+    '**_ViewBinding*',
+    '**_MembersInjector*',
+    '**Subcomponent*',
+    "**Component*",
+    '**Module*',
+  ]
+  outputFormats = ['HTML']
+  threads = 9
+  timestampedReports = false
+}

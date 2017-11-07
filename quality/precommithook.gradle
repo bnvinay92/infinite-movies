@@ -1,0 +1,14 @@
+task gitExecutableHooks {
+  doLast {
+    Runtime.getRuntime().exec("chmod -R +x .git/hooks/");
+  }
+}
+
+task installGitHooks(type: Copy) {
+  from new File("$project.rootDir/quality", 'pre-commit')
+  into { new File(rootProject.rootDir, '.git/hooks') }
+}
+
+preBuild.finalizedBy installGitHooks
+gitExecutableHooks.dependsOn installGitHooks
+clean.dependsOn gitExecutableHooks
