@@ -1,3 +1,4 @@
 <resources>
   <string name="app_name">InfiniteMovies</string>
+  <string name="button_daterange_text">Date range</string>
 </resources>
