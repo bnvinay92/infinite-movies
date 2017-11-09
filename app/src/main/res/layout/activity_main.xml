@@ -18,6 +18,16 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:text="@string/button_daterange_text" />
+    <View
+      android:layout_width="0dp"
+      android:layout_height="0dp"
+      android:layout_weight="1" />
+    <TextView
+      android:id="@+id/tview_daterange"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/tview_daterange_text_default"
+      android:textColor="@color/colorAccent" />
   </LinearLayout>
 
   <android.support.v7.widget.RecyclerView
