@@ -1,7 +1,8 @@
 buildscript {
-  project.ext.versions = [
+  ext.versions = [
       supportLib : '26.1.0',
       butterknife: '8.8.1',
+      autoValue  : '1.5.2',
   ]
   repositories {
     google()
