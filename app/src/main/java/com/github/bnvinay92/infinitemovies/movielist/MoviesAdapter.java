@@ -8,21 +8,14 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.github.bnvinay92.infinitemovies.R;
-import java.util.ArrayList;
 import java.util.List;
 
 class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder> {
 
   private final List<MovieViewModel> movies;
 
-  MoviesAdapter() {
-    movies = new ArrayList<>();
-  }
-
-  void addMovies(List<MovieViewModel> moreMovies) {
-    int size = movies.size();
-    movies.addAll(moreMovies);
-    notifyItemRangeInserted(size, moreMovies.size());
+  MoviesAdapter(List<MovieViewModel> movies) {
+    this.movies = movies;
   }
 
   @Override

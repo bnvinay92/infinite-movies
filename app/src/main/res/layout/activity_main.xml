@@ -4,7 +4,7 @@
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:orientation="vertical"
-  tools:context="com.github.bnvinay92.infinitemovies.MainActivity">
+  tools:context="com.github.bnvinay92.infinitemovies.movielist.MainActivity">
 
   <LinearLayout
     android:layout_width="match_parent"
@@ -13,21 +13,26 @@
     android:background="@color/colorPrimary"
     android:gravity="center"
     android:orientation="horizontal">
-    <Button
-      android:id="@+id/button_daterange"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="@string/button_daterange_text" />
-    <View
+    <EditText
+      android:id="@+id/etext_startdate"
       android:layout_width="0dp"
-      android:layout_height="0dp"
-      android:layout_weight="1" />
-    <TextView
-      android:id="@+id/tview_daterange"
-      android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:text="@string/tview_daterange_text_default"
-      android:textColor="@color/colorAccent" />
+      android:layout_weight="2"
+      android:hint="@string/etext_date_hint"
+      android:inputType="date" />
+    <EditText
+      android:id="@+id/etext_enddate"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_weight="2"
+      android:hint="@string/etext_date_hint"
+      android:inputType="date" />
+    <Button
+      android:id="@+id/button_submit"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      android:text="@string/button_submit_text" />
   </LinearLayout>
 
   <android.support.v7.widget.RecyclerView
