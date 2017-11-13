@@ -5,11 +5,11 @@ import com.google.auto.value.AutoValue;
 @AutoValue
 abstract class MovieViewModel {
 
-  static MovieViewModel create(String name, String releaseDate) {
-    return new AutoValue_MovieViewModel(name, releaseDate);
-  }
-
   abstract String name();
 
   abstract String releaseDate();
+
+  static MovieViewModel create(Movie movie) {
+    return null;
+  }
 }

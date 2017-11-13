@@ -1,6 +1,8 @@
 package com.github.bnvinay92.infinitemovies.movielist;
 
 import com.google.auto.value.AutoValue;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 interface Ui {
 
@@ -11,21 +13,39 @@ interface Ui {
 
   interface UiEvent {
 
-    interface LoadNextPage extends UiEvent {}
+    @AutoValue
+    class LoadNextPage implements UiEvent {
+
+      static LoadNextPage create() {
+        return new AutoValue_Ui_UiEvent_LoadNextPage();
+      }
+    }
 
     @AutoValue
     abstract class DateRange implements UiEvent {
+
+      private static final SimpleDateFormat FORMAT = new SimpleDateFormat("MM-dd-yyyy");
 
       static DateRange create(String startDate, String endDate) {
         return new AutoValue_Ui_UiEvent_DateRange(startDate, endDate);
       }
 
-      abstract String startDate();
+      abstract String start();
 
-      abstract String endDate();
+      abstract String end();
+
+      // TODO: Check if start date is before end date.
+      private boolean isValid(String dateString) {
+        try {
+          FORMAT.parse(dateString);
+          return true;
+        } catch (ParseException e) {
+          return dateString.isEmpty();
+        }
+      }
 
       boolean isValid() {
-        return true;
+        return isValid(start()) && isValid(end());
       }
     }
   }

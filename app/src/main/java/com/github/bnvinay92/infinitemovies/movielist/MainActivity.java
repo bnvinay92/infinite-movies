@@ -1,6 +1,7 @@
 package com.github.bnvinay92.infinitemovies.movielist;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -9,6 +10,7 @@ import android.widget.EditText;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.github.bnvinay92.infinitemovies.R;
+import com.github.bnvinay92.infinitemovies.movielist.Ui.UiEvent.DateRange;
 import com.github.bnvinay92.infinitemovies.movielist.Ui.UiEvent.LoadNextPage;
 import com.jakewharton.rxbinding2.view.RxView;
 import io.reactivex.BackpressureStrategy;
@@ -41,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements Ui {
 
   private void initRecyclerView() {
     layoutManager = new LinearLayoutManager(this);
+    recyclerView.setLayoutManager(layoutManager);
   }
 
   @Override
@@ -50,10 +53,10 @@ public class MainActivity extends AppCompatActivity implements Ui {
   }
 
   private Flowable<UiEvent> streamUiEvents() {
-    return Flowable.merge(loadNextPageEvents(), dateRangeChanges());
+    return Flowable.merge(nextPageRequests(), dateRangeSubmissions());
   }
 
-  private Flowable<UiEvent.LoadNextPage> loadNextPageEvents() {
+  private Flowable<UiEvent.LoadNextPage> nextPageRequests() {
     return Flowable.create(emitter -> {
       InfiniteScrollListener<LoadNextPage> listener = new InfiniteScrollListener<>(layoutManager, emitter);
       emitter.setCancellable(() -> recyclerView.removeOnScrollListener(listener));
@@ -61,10 +64,14 @@ public class MainActivity extends AppCompatActivity implements Ui {
     }, BackpressureStrategy.DROP);
   }
 
-  private Flowable<UiEvent.DateRange> dateRangeChanges() {
+  private Flowable<DateRange> dateRangeSubmissions() {
     return RxView.clicks(submitView)
-        .map(__ -> UiEvent.DateRange.create(startDateView.getText().toString(), endDateView.getText().toString()))
-        .filter(UiEvent.DateRange::isValid)
+        .map(__ -> DateRange.create(getString(startDateView), getString(endDateView)))
         .toFlowable(BackpressureStrategy.LATEST);
+  }
+
+  @NonNull
+  private String getString(EditText dateView) {
+    return dateView.getText().toString().trim();
   }
 }
