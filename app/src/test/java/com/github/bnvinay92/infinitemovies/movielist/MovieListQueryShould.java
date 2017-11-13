@@ -11,6 +11,7 @@ import com.github.bnvinay92.infinitemovies.movielist.MovieListResult.TimedOut;
 import com.github.bnvinay92.infinitemovies.movielist.Ui.UiEvent.DateRange;
 import io.reactivex.processors.PublishProcessor;
 import io.reactivex.subscribers.TestSubscriber;
+import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 import org.junit.Before;
 import org.junit.Rule;
@@ -28,14 +29,17 @@ public class MovieListQueryShould {
   @InjectMocks MovieListQuery usecase;
   @Mock MovieDbApi api;
 
+  MovieListResponse response = new MovieListResponse();
+
   PublishProcessor<MovieListRequest> requests = PublishProcessor.create();
-  PublishProcessor<String> responses = PublishProcessor.create();
+  PublishProcessor<MovieListResponse> responses = PublishProcessor.create();
 
   TestSubscriber<MovieListResult> testSubscriber;
   MovieListRequest request = MovieListRequest.create(1, DateRange.create("", ""));
 
   @Before
   public void setUp() throws Exception {
+    response.movies = Collections.emptyList();
     testSubscriber = requests.onBackpressureDrop().compose(usecase).test();
   }
 
@@ -45,9 +49,9 @@ public class MovieListQueryShould {
 
     requests.onNext(request);
     requests.onNext(request);
-    responses.onNext("");
+    responses.onNext(response);
 
-    testSubscriber.assertValues(Loading.create(), Success.create());
+    testSubscriber.assertValues(Loading.create(), Success.create(Collections.emptyList()));
   }
 
   @Test
