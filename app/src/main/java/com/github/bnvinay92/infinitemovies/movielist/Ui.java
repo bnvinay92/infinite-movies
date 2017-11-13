@@ -15,6 +15,8 @@ interface Ui {
 
   void showLoading();
 
+  void resetList();
+
   interface UiChange {
 
     void paint(Ui ui);
@@ -23,7 +25,7 @@ interface Ui {
   interface UiEvent {
 
     @AutoValue
-    class LoadNextPage implements UiEvent {
+    abstract class LoadNextPage implements UiEvent {
 
       static LoadNextPage create() {
         return new AutoValue_Ui_UiEvent_LoadNextPage();

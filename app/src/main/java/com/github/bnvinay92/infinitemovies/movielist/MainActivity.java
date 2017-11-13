@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements Ui {
     layoutManager = new LinearLayoutManager(this);
     recyclerView.setLayoutManager(layoutManager);
     recyclerView.setAdapter(adapter);
+
   }
 
   @Override
@@ -80,12 +81,13 @@ public class MainActivity extends AppCompatActivity implements Ui {
       emitter.setCancellable(() -> recyclerView.removeOnScrollListener(listener));
       recyclerView.addOnScrollListener(listener);
     }, BackpressureStrategy.DROP)
-        .map(o -> LoadNextPage.create());
+        .map(__ -> LoadNextPage.create());
   }
 
   private Flowable<DateRange> dateRangeSubmissions() {
     return RxView.clicks(submitView)
         .map(__ -> DateRange.create(getString(startDateView), getString(endDateView)))
+        .startWith(DateRange.create("", ""))
         .toFlowable(BackpressureStrategy.LATEST);
   }
 
@@ -95,10 +97,10 @@ public class MainActivity extends AppCompatActivity implements Ui {
   }
 
   @Override
-  public void addPage(List<MovieViewModel> page) {
+  public void addPage(List<MovieViewModel> moviePage) {
     int currentSize = movies.size();
-    movies.addAll(page);
-    adapter.notifyItemRangeInserted(currentSize, page.size());
+    movies.addAll(moviePage);
+    adapter.notifyItemRangeInserted(currentSize, moviePage.size());
   }
 
   @Override
@@ -108,11 +110,17 @@ public class MainActivity extends AppCompatActivity implements Ui {
 
   @Override
   public void showError(String errorMessage) {
-
   }
 
   @Override
   public void showLoading() {
     Toast.makeText(this, "Loading next page...", Toast.LENGTH_SHORT).show();
+  }
+
+  @Override
+  public void resetList() {
+    int currentSize = movies.size();
+    movies.clear();
+    adapter.notifyItemRangeRemoved(0, currentSize);
   }
 }
