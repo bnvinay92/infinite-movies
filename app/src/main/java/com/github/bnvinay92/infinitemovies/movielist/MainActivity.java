@@ -5,6 +5,8 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.OnChildAttachStateChangeListener;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -12,12 +14,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.github.bnvinay92.infinitemovies.InfiniteMoviesApplication;
 import com.github.bnvinay92.infinitemovies.R;
+import com.github.bnvinay92.infinitemovies.moviedetail.MovieDetailActivity;
 import com.github.bnvinay92.infinitemovies.movielist.Ui.UiEvent.DateRange;
 import com.github.bnvinay92.infinitemovies.movielist.Ui.UiEvent.LoadNextPage;
 import com.jakewharton.rxbinding2.view.RxView;
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 import io.reactivex.FlowableTransformer;
+import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +40,8 @@ public class MainActivity extends AppCompatActivity implements Ui {
   private List<MovieViewModel> movies = new ArrayList<>();
   private MoviesAdapter adapter = new MoviesAdapter(movies);
   private LinearLayoutManager layoutManager;
-  private Disposable disposable;
+  private Disposable onDestroyDisposable;
+  private Disposable onStopDisposable;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements Ui {
     ButterKnife.bind(this);
     initRecyclerView();
 
-    disposable = streamUiEvents()
+    onDestroyDisposable = streamUiEvents()
         .doOnNext(uiEvent -> Timber.d(uiEvent.getClass().getSimpleName()))
         .compose(controller)
         .subscribe(
@@ -62,13 +67,26 @@ public class MainActivity extends AppCompatActivity implements Ui {
     layoutManager = new LinearLayoutManager(this);
     recyclerView.setLayoutManager(layoutManager);
     recyclerView.setAdapter(adapter);
+  }
 
+  @Override
+  protected void onStart() {
+    super.onStart();
+    onStopDisposable = streamItemClicks()
+        .map(adapterPosition -> movies.get(adapterPosition))
+        .subscribe(movie -> MovieDetailActivity.start(this, movie.id(), movie.name()));
+  }
+
+  @Override
+  protected void onStop() {
+    super.onStop();
+    onStopDisposable.dispose();
   }
 
   @Override
   protected void onDestroy() {
     super.onDestroy();
-    disposable.dispose();
+    onDestroyDisposable.dispose();
   }
 
   private Flowable<UiEvent> streamUiEvents() {
@@ -94,6 +112,24 @@ public class MainActivity extends AppCompatActivity implements Ui {
   @NonNull
   private String getString(EditText dateView) {
     return dateView.getText().toString().trim();
+  }
+
+  private Observable<Integer> streamItemClicks() {
+    return Observable.<View>create(emitter -> {
+      OnChildAttachStateChangeListener listener = new OnChildAttachStateChangeListener() {
+        @Override
+        public void onChildViewAttachedToWindow(View view) {
+          view.setOnClickListener(emitter::onNext);
+        }
+
+        @Override
+        public void onChildViewDetachedFromWindow(View view) {
+
+        }
+      };
+      emitter.setCancellable(() -> recyclerView.removeOnChildAttachStateChangeListener(listener));
+      recyclerView.addOnChildAttachStateChangeListener(listener);
+    }).map(view -> recyclerView.getChildAdapterPosition(view));
   }
 
   @Override

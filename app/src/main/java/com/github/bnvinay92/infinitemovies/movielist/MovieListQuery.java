@@ -15,10 +15,10 @@ public class MovieListQuery implements FlowableTransformer<MovieListRequest, Mov
 
   static final int TIMEOUT = 15;
 
-  private final MovieDbApi api;
+  private final MovieListApi api;
 
   @Inject
-  MovieListQuery(MovieDbApi api) {
+  MovieListQuery(MovieListApi api) {
     this.api = api;
   }
 

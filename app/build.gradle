@@ -29,6 +29,7 @@ android.variantFilter { variant ->
 }
 
 dependencies {
+  implementation 'com.android.support.constraint:constraint-layout:1.0.2'
   compileOnly(
       "com.google.auto.value:auto-value:$versions.autoValue",
   )

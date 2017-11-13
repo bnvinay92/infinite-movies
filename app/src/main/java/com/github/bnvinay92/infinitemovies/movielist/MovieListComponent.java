@@ -28,8 +28,8 @@ public interface MovieListComponent {
   abstract class MovieListModule {
 
     @Provides
-    static MovieDbApi provideMovieDbApi(Retrofit retrofit) {
-      return retrofit.create(MovieDbApi.class);
+    static MovieListApi provideMovieDbApi(Retrofit retrofit) {
+      return retrofit.create(MovieListApi.class);
     }
 
     @Binds

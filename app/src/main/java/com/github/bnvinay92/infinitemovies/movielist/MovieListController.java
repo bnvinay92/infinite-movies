@@ -22,10 +22,10 @@ public class MovieListController implements FlowableTransformer<UiEvent, UiChang
   @Override
   public Publisher<UiChange> apply(Flowable<UiEvent> uiEvents) {
     return uiEvents.publish(uiEventMulticast -> {
-      Flowable<Integer> pages = streamPageRequests(uiEventMulticast);
+      Flowable<Integer> throttledPages = streamPageRequests(uiEventMulticast);
       Flowable<DateRange> ranges = uiEventMulticast.ofType(DateRange.class);
       Flowable<DateRange> validRanges = ranges.filter(DateRange::isValid);
-      return Flowable.merge(streamPaginatedMovieLists(pages, validRanges), validRanges.map(o -> Ui::resetList));
+      return Flowable.merge(streamPaginatedMovieLists(throttledPages, validRanges), validRanges.map(o -> Ui::resetList));
     });
   }
 

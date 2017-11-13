@@ -27,7 +27,7 @@ public class MovieListQueryShould {
   @Rule public TestSchedulerRule testSchedulerRule = new TestSchedulerRule();
 
   @InjectMocks MovieListQuery usecase;
-  @Mock MovieDbApi api;
+  @Mock MovieListApi api;
 
   MovieListResponse response = new MovieListResponse();
 

@@ -2,6 +2,7 @@ package com.github.bnvinay92.infinitemovies;
 
 import android.app.Application;
 import com.github.bnvinay92.infinitemovies.RootComponent.RootModule;
+import com.github.bnvinay92.infinitemovies.moviedetail.MovieDetailComponent;
 import com.github.bnvinay92.infinitemovies.movielist.MovieListComponent;
 import com.google.gson.Gson;
 import dagger.BindsInstance;
@@ -20,6 +21,8 @@ import timber.log.Timber;
 public interface RootComponent {
 
   MovieListComponent.Builder movieListComponentBuilder();
+
+  MovieDetailComponent.Builder movieDetailComponentBuilder();
 
   @dagger.Component.Builder
   interface Builder {

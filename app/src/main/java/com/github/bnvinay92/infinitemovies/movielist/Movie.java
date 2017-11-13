@@ -8,7 +8,7 @@ class Movie {
 
   @SerializedName("vote_count")
   @Expose
-  public int voteCount;
+  public double voteCount;
   @SerializedName("id")
   @Expose
   public int id;
@@ -17,7 +17,7 @@ class Movie {
   public boolean video;
   @SerializedName("vote_average")
   @Expose
-  public int voteAverage;
+  public double voteAverage;
   @SerializedName("title")
   @Expose
   public String title;

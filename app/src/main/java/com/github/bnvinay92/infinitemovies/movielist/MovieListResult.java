@@ -3,6 +3,7 @@ package com.github.bnvinay92.infinitemovies.movielist;
 import com.github.bnvinay92.infinitemovies.movielist.Ui.UiChange;
 import com.google.auto.value.AutoValue;
 import java.util.List;
+import timber.log.Timber;
 
 interface MovieListResult extends UiChange {
 
@@ -51,6 +52,7 @@ interface MovieListResult extends UiChange {
   abstract class SomeError implements MovieListResult {
 
     static SomeError create(Throwable throwable) {
+      Timber.e(throwable);
       return new AutoValue_MovieListResult_SomeError(throwable);
     }
 
