@@ -19,7 +19,7 @@ public class MovieListControllerShould {
   @Rule public MockitoRule mockitoRule = MockitoJUnit.rule();
 
   MovieListController controller;
-  MockFlowableTransformer<MovieListAction, MovieListResult> usecase = new MockFlowableTransformer<>();
+  MockFlowableTransformer<MovieListRequest, MovieListResult> usecase = new MockFlowableTransformer<>();
 
   PublishProcessor<UiEvent> uiEvents = PublishProcessor.create();
 
@@ -49,9 +49,9 @@ public class MovieListControllerShould {
     scroll();
 
     usecase.getTestObserver().assertValues(
-        MovieListAction.create(1, validRange),
-        MovieListAction.create(2, validRange),
-        MovieListAction.create(3, validRange));
+        MovieListRequest.create(1, validRange),
+        MovieListRequest.create(2, validRange),
+        MovieListRequest.create(3, validRange));
   }
 
   @Test
@@ -61,9 +61,9 @@ public class MovieListControllerShould {
     setDateRange(validRange2);
 
     usecase.getTestObserver().assertValues(
-        MovieListAction.create(1, validRange),
-        MovieListAction.create(2, validRange),
-        MovieListAction.create(1, validRange2));
+        MovieListRequest.create(1, validRange),
+        MovieListRequest.create(2, validRange),
+        MovieListRequest.create(1, validRange2));
   }
 
   @Test
@@ -75,9 +75,9 @@ public class MovieListControllerShould {
     scroll();
 
     usecase.getTestObserver().assertValues(
-        MovieListAction.create(1, validRange2),
-        MovieListAction.create(2, validRange2),
-        MovieListAction.create(3, validRange2));
+        MovieListRequest.create(1, validRange2),
+        MovieListRequest.create(2, validRange2),
+        MovieListRequest.create(3, validRange2));
   }
 
   @After

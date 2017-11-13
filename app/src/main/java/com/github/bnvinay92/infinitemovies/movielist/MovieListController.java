@@ -10,9 +10,9 @@ import org.reactivestreams.Publisher;
 
 public class MovieListController implements FlowableTransformer<UiEvent, UiChange> {
 
-  private final FlowableTransformer<MovieListAction, MovieListResult> usecase;
+  private final FlowableTransformer<MovieListRequest, MovieListResult> usecase;
 
-  MovieListController(FlowableTransformer<MovieListAction, MovieListResult> usecase) {
+  MovieListController(FlowableTransformer<MovieListRequest, MovieListResult> usecase) {
     this.usecase = usecase;
   }
 
@@ -27,7 +27,7 @@ public class MovieListController implements FlowableTransformer<UiEvent, UiChang
 
   private Flowable<UiChange> streamPaginatedMovieLists(Flowable<Integer> pages, Flowable<DateRange> ranges) {
     return ranges.filter(DateRange::isValid)
-        .switchMap(range -> pages.map(page -> MovieListAction.create(page, range)))
+        .switchMap(range -> pages.map(page -> MovieListRequest.create(page, range)))
         .compose(usecase);
   }
 

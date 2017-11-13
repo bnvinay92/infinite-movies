@@ -29,8 +29,6 @@ android.variantFilter { variant ->
 }
 
 dependencies {
-  implementation 'com.android.support:support-v4:26.1.0'
-  implementation 'com.android.support:recyclerview-v7:26.1.0'
   compileOnly(
       "com.google.auto.value:auto-value:$versions.autoValue",
   )
@@ -46,6 +44,10 @@ dependencies {
       'com.jakewharton.timber:timber:4.6.0',
 
       "com.jakewharton:butterknife:$versions.butterknife",
+
+      "com.squareup.retrofit2:retrofit:$versions.retrofit",
+      "com.squareup.retrofit2:adapter-rxjava:$versions.retrofit",
+      "com.squareup.retrofit2:converter-gson:$versions.retrofit"
   )
   annotationProcessor(
       "com.google.auto.value:auto-value:$versions.autoValue",

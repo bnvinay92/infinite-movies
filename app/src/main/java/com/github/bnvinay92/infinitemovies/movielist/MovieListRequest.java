@@ -4,10 +4,10 @@ import com.github.bnvinay92.infinitemovies.movielist.Ui.UiEvent.DateRange;
 import com.google.auto.value.AutoValue;
 
 @AutoValue
-abstract class MovieListAction {
+abstract class MovieListRequest {
 
-  static MovieListAction create(int page, DateRange dateRange) {
-    return new AutoValue_MovieListAction(page, dateRange.start(), dateRange.end());
+  static MovieListRequest create(int page, DateRange dateRange) {
+    return new AutoValue_MovieListRequest(page, dateRange.start(), dateRange.end());
   }
 
   abstract int page();
