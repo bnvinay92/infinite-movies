@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.github.bnvinay92.infinitemovies.InfiniteMoviesApplication;
@@ -18,7 +19,10 @@ import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 import io.reactivex.FlowableTransformer;
 import io.reactivex.disposables.Disposable;
+import java.util.ArrayList;
+import java.util.List;
 import javax.inject.Inject;
+import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity implements Ui {
 
@@ -29,6 +33,8 @@ public class MainActivity extends AppCompatActivity implements Ui {
 
   @Inject FlowableTransformer<UiEvent, UiChange> controller;
 
+  private List<MovieViewModel> movies = new ArrayList<>();
+  private MoviesAdapter adapter = new MoviesAdapter(movies);
   private LinearLayoutManager layoutManager;
   private Disposable disposable;
 
@@ -45,13 +51,17 @@ public class MainActivity extends AppCompatActivity implements Ui {
     initRecyclerView();
 
     disposable = streamUiEvents()
+        .doOnNext(uiEvent -> Timber.d(uiEvent.getClass().getSimpleName()))
         .compose(controller)
-        .subscribe(uiChange -> uiChange.paint(this));
+        .subscribe(
+            uiChange -> uiChange.paint(this),
+            Timber::e);
   }
 
   private void initRecyclerView() {
     layoutManager = new LinearLayoutManager(this);
     recyclerView.setLayoutManager(layoutManager);
+    recyclerView.setAdapter(adapter);
   }
 
   @Override
@@ -66,10 +76,11 @@ public class MainActivity extends AppCompatActivity implements Ui {
 
   private Flowable<UiEvent.LoadNextPage> nextPageRequests() {
     return Flowable.create(emitter -> {
-      InfiniteScrollListener<LoadNextPage> listener = new InfiniteScrollListener<>(layoutManager, emitter);
+      InfiniteScrollListener listener = new InfiniteScrollListener(layoutManager, emitter);
       emitter.setCancellable(() -> recyclerView.removeOnScrollListener(listener));
       recyclerView.addOnScrollListener(listener);
-    }, BackpressureStrategy.DROP);
+    }, BackpressureStrategy.DROP)
+        .map(o -> LoadNextPage.create());
   }
 
   private Flowable<DateRange> dateRangeSubmissions() {
@@ -81,5 +92,27 @@ public class MainActivity extends AppCompatActivity implements Ui {
   @NonNull
   private String getString(EditText dateView) {
     return dateView.getText().toString().trim();
+  }
+
+  @Override
+  public void addPage(List<MovieViewModel> page) {
+    int currentSize = movies.size();
+    movies.addAll(page);
+    adapter.notifyItemRangeInserted(currentSize, page.size());
+  }
+
+  @Override
+  public void showTimedOut() {
+    Toast.makeText(this, "Next page timed out!", Toast.LENGTH_LONG).show();
+  }
+
+  @Override
+  public void showError(String errorMessage) {
+
+  }
+
+  @Override
+  public void showLoading() {
+    Toast.makeText(this, "Loading next page...", Toast.LENGTH_SHORT).show();
   }
 }

@@ -2,6 +2,6 @@
   <string name="app_name">InfiniteMovies</string>
   <string name="button_daterange_text">Date range:</string>
   <string name="tview_daterange_text_default">None</string>
-  <string name="etext_date_hint">dd-MM-YYYY</string>
+  <string name="etext_date_hint">YYYY-MM-dd</string>
   <string name="button_submit_text">go</string>
 </resources>

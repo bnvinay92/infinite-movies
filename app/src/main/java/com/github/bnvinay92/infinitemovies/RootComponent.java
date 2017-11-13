@@ -42,7 +42,7 @@ public interface RootComponent {
     @Singleton
     static OkHttpClient provideOkHttpClient() {
       HttpLoggingInterceptor logging = new HttpLoggingInterceptor(message -> Timber.tag("OkHttp").d(message));
-      logging.setLevel(Level.BODY);
+      logging.setLevel(Level.BASIC);
 
       return new OkHttpClient.Builder()
           .addInterceptor(logging)

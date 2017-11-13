@@ -2,6 +2,7 @@ package com.github.bnvinay92.infinitemovies.movielist;
 
 import com.github.bnvinay92.infinitemovies.movielist.Ui.UiChange;
 import com.google.auto.value.AutoValue;
+import java.util.List;
 
 interface MovieListResult extends UiChange {
 
@@ -14,20 +15,22 @@ interface MovieListResult extends UiChange {
 
     @Override
     public void paint(Ui ui) {
-
+      ui.showLoading();
     }
   }
 
   @AutoValue
   abstract class Success implements MovieListResult {
 
-    static Success create() {
-      return new AutoValue_MovieListResult_Success();
+    static Success create(List<MovieViewModel> page) {
+      return new AutoValue_MovieListResult_Success(page);
     }
+
+    abstract List<MovieViewModel> page();
 
     @Override
     public void paint(Ui ui) {
-
+      ui.addPage(page());
     }
   }
 
@@ -40,7 +43,7 @@ interface MovieListResult extends UiChange {
 
     @Override
     public void paint(Ui ui) {
-
+      ui.showTimedOut();
     }
   }
 
@@ -55,7 +58,7 @@ interface MovieListResult extends UiChange {
 
     @Override
     public void paint(Ui ui) {
-
+      ui.showError(throwable().getMessage());
     }
   }
 }

@@ -5,14 +5,14 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.OnScrollListener;
 import io.reactivex.FlowableEmitter;
 
-class InfiniteScrollListener<T> extends OnScrollListener {
+class InfiniteScrollListener extends OnScrollListener {
 
   private static final int MINIMUM_THRESHOLD = 7;
 
   private final LinearLayoutManager layoutManager;
-  private final FlowableEmitter<? super T> emitter;
+  private final FlowableEmitter<Object> emitter;
 
-  InfiniteScrollListener(LinearLayoutManager layoutManager, FlowableEmitter<? super T> emitter) {
+  InfiniteScrollListener(LinearLayoutManager layoutManager, FlowableEmitter<Object> emitter) {
     this.layoutManager = layoutManager;
     this.emitter = emitter;
   }
@@ -24,7 +24,7 @@ class InfiniteScrollListener<T> extends OnScrollListener {
     int numItemsBelowTheFold = calculateNumItemsBelowTheFold();
 
     if (numItemsBelowTheFold <= MINIMUM_THRESHOLD) {
-      emitter.onNext((T) new Object());
+      emitter.onNext(new Object());
     }
   }
 

@@ -3,8 +3,17 @@ package com.github.bnvinay92.infinitemovies.movielist;
 import com.google.auto.value.AutoValue;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 interface Ui {
+
+  void addPage(List<MovieViewModel> page);
+
+  void showTimedOut();
+
+  void showError(String errorMessage);
+
+  void showLoading();
 
   interface UiChange {
 
@@ -24,7 +33,7 @@ interface Ui {
     @AutoValue
     abstract class DateRange implements UiEvent {
 
-      private final SimpleDateFormat format = new SimpleDateFormat("MM-dd-yyyy");
+      private final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 
       static DateRange create(String startDate, String endDate) {
         return new AutoValue_Ui_UiEvent_DateRange(startDate, endDate);

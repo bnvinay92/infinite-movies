@@ -8,6 +8,7 @@ import io.reactivex.Flowable;
 import io.reactivex.FlowableTransformer;
 import javax.inject.Inject;
 import org.reactivestreams.Publisher;
+import timber.log.Timber;
 
 public class MovieListController implements FlowableTransformer<UiEvent, UiChange> {
 
@@ -30,7 +31,9 @@ public class MovieListController implements FlowableTransformer<UiEvent, UiChang
   private Flowable<UiChange> streamPaginatedMovieLists(Flowable<Integer> pages, Flowable<DateRange> ranges) {
     return ranges.filter(DateRange::isValid)
         .switchMap(range -> pages.map(page -> MovieListRequest.create(page, range)))
-        .compose(query);
+        .doOnNext(page -> Timber.d("Page: %s", page))
+        .<UiChange>compose(query)
+        .doOnNext(uiChange -> Timber.d("UiChange: %s", uiChange.getClass().getSimpleName()));
   }
 
   private Flowable<Integer> streamPageRequests(Flowable<UiEvent> uiEventMulticast) {
