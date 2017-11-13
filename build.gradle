@@ -4,6 +4,7 @@ buildscript {
       butterknife: '8.8.1',
       autoValue  : '1.5.2',
       retrofit   : '2.3.0',
+      dagger     : '2.13'
   ]
   repositories {
     google()

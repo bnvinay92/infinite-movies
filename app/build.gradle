@@ -46,12 +46,18 @@ dependencies {
       "com.jakewharton:butterknife:$versions.butterknife",
 
       "com.squareup.retrofit2:retrofit:$versions.retrofit",
-      "com.squareup.retrofit2:adapter-rxjava:$versions.retrofit",
-      "com.squareup.retrofit2:converter-gson:$versions.retrofit"
+      "com.squareup.retrofit2:adapter-rxjava2:$versions.retrofit",
+      "com.squareup.retrofit2:converter-gson:$versions.retrofit",
+      "com.squareup.okhttp3:logging-interceptor:3.8.0",
+
+
+      'javax.annotation:jsr250-api:1.0',
+      "com.google.dagger:dagger:$versions.dagger",
   )
   annotationProcessor(
       "com.google.auto.value:auto-value:$versions.autoValue",
       "com.jakewharton:butterknife-compiler:$versions.butterknife",
+      "com.google.dagger:dagger-compiler:$versions.dagger",
   )
   testImplementation(
       'junit:junit:4.12',

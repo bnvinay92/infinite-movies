@@ -45,10 +45,10 @@ interface MovieListResult extends UiChange {
   }
 
   @AutoValue
-  abstract class Error implements MovieListResult {
+  abstract class SomeError implements MovieListResult {
 
-    static Error create(Throwable throwable) {
-      return new AutoValue_MovieListResult_Error(throwable);
+    static SomeError create(Throwable throwable) {
+      return new AutoValue_MovieListResult_SomeError(throwable);
     }
 
     abstract Throwable throwable();

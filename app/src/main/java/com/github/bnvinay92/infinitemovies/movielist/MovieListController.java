@@ -6,14 +6,16 @@ import com.github.bnvinay92.infinitemovies.movielist.Ui.UiEvent.DateRange;
 import com.github.bnvinay92.infinitemovies.movielist.Ui.UiEvent.LoadNextPage;
 import io.reactivex.Flowable;
 import io.reactivex.FlowableTransformer;
+import javax.inject.Inject;
 import org.reactivestreams.Publisher;
 
 public class MovieListController implements FlowableTransformer<UiEvent, UiChange> {
 
-  private final FlowableTransformer<MovieListRequest, MovieListResult> usecase;
+  private final FlowableTransformer<MovieListRequest, MovieListResult> query;
 
-  MovieListController(FlowableTransformer<MovieListRequest, MovieListResult> usecase) {
-    this.usecase = usecase;
+  @Inject
+  MovieListController(FlowableTransformer<MovieListRequest, MovieListResult> query) {
+    this.query = query;
   }
 
   @Override
@@ -28,7 +30,7 @@ public class MovieListController implements FlowableTransformer<UiEvent, UiChang
   private Flowable<UiChange> streamPaginatedMovieLists(Flowable<Integer> pages, Flowable<DateRange> ranges) {
     return ranges.filter(DateRange::isValid)
         .switchMap(range -> pages.map(page -> MovieListRequest.create(page, range)))
-        .compose(usecase);
+        .compose(query);
   }
 
   private Flowable<Integer> streamPageRequests(Flowable<UiEvent> uiEventMulticast) {

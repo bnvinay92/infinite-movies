@@ -20,12 +20,12 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
-public class MovieListUsecaseShould {
+public class MovieListQueryShould {
 
   @Rule public MockitoRule mockitoRule = MockitoJUnit.rule();
   @Rule public TestSchedulerRule testSchedulerRule = new TestSchedulerRule();
 
-  @InjectMocks MovieListUsecase usecase;
+  @InjectMocks MovieListQuery usecase;
   @Mock MovieDbApi api;
 
   PublishProcessor<MovieListRequest> requests = PublishProcessor.create();
@@ -55,7 +55,7 @@ public class MovieListUsecaseShould {
     when(api.fetchMovies(anyInt(), anyString(), anyString())).thenReturn(responses);
 
     requests.onNext(request);
-    testSchedulerRule.getTestScheduler().advanceTimeBy(MovieListUsecase.TIMEOUT, TimeUnit.SECONDS);
+    testSchedulerRule.getTestScheduler().advanceTimeBy(MovieListQuery.TIMEOUT, TimeUnit.SECONDS);
 
     testSubscriber.assertValues(Loading.create(), TimedOut.create());
   }

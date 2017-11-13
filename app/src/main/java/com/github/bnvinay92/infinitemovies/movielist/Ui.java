@@ -24,7 +24,7 @@ interface Ui {
     @AutoValue
     abstract class DateRange implements UiEvent {
 
-      private static final SimpleDateFormat FORMAT = new SimpleDateFormat("MM-dd-yyyy");
+      private final SimpleDateFormat format = new SimpleDateFormat("MM-dd-yyyy");
 
       static DateRange create(String startDate, String endDate) {
         return new AutoValue_Ui_UiEvent_DateRange(startDate, endDate);
@@ -37,7 +37,7 @@ interface Ui {
       // TODO: Check if start date is before end date.
       private boolean isValid(String dateString) {
         try {
-          FORMAT.parse(dateString);
+          format.parse(dateString);
           return true;
         } catch (ParseException e) {
           return dateString.isEmpty();

@@ -35,7 +35,7 @@ class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder> {
     return movies.size();
   }
 
-  class ViewHolder extends RecyclerView.ViewHolder {
+  static class ViewHolder extends RecyclerView.ViewHolder {
 
     @BindView(R.id.tview_movie_name) TextView nameView;
     @BindView(R.id.tview_movie_releasedate) TextView releaseDateView;

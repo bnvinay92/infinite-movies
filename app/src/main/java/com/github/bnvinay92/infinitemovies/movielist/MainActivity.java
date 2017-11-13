@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import com.github.bnvinay92.infinitemovies.InfiniteMoviesApplication;
 import com.github.bnvinay92.infinitemovies.R;
 import com.github.bnvinay92.infinitemovies.movielist.Ui.UiEvent.DateRange;
 import com.github.bnvinay92.infinitemovies.movielist.Ui.UiEvent.LoadNextPage;
@@ -17,6 +18,7 @@ import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 import io.reactivex.FlowableTransformer;
 import io.reactivex.disposables.Disposable;
+import javax.inject.Inject;
 
 public class MainActivity extends AppCompatActivity implements Ui {
 
@@ -24,13 +26,19 @@ public class MainActivity extends AppCompatActivity implements Ui {
   @BindView(R.id.etext_startdate) EditText startDateView;
   @BindView(R.id.etext_enddate) EditText endDateView;
   @BindView(R.id.button_submit) Button submitView;
-  private LinearLayoutManager layoutManager;
 
+  @Inject FlowableTransformer<UiEvent, UiChange> controller;
+
+  private LinearLayoutManager layoutManager;
   private Disposable disposable;
-  private FlowableTransformer<UiEvent, UiChange> controller;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
+    InfiniteMoviesApplication.rootComponent()
+        .movieListComponentBuilder()
+        .movieListActivity(this)
+        .build()
+        .inject(this);
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
     ButterKnife.bind(this);
