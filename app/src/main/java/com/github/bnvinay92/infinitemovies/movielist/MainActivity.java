@@ -5,8 +5,6 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.OnChildAttachStateChangeListener;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -73,7 +71,8 @@ public class MainActivity extends AppCompatActivity implements Ui {
   protected void onStart() {
     super.onStart();
     onStopDisposable = streamItemClicks()
-        .map(adapterPosition -> movies.get(adapterPosition))
+        .doOnSubscribe(s -> Timber.w("Subscribed"))
+        .doFinally(() -> Timber.w("Un Subscribed"))
         .subscribe(movie -> MovieDetailActivity.start(this, movie.id(), movie.name()));
   }
 
@@ -114,22 +113,9 @@ public class MainActivity extends AppCompatActivity implements Ui {
     return dateView.getText().toString().trim();
   }
 
-  private Observable<Integer> streamItemClicks() {
-    return Observable.<View>create(emitter -> {
-      OnChildAttachStateChangeListener listener = new OnChildAttachStateChangeListener() {
-        @Override
-        public void onChildViewAttachedToWindow(View view) {
-          view.setOnClickListener(emitter::onNext);
-        }
-
-        @Override
-        public void onChildViewDetachedFromWindow(View view) {
-
-        }
-      };
-      emitter.setCancellable(() -> recyclerView.removeOnChildAttachStateChangeListener(listener));
-      recyclerView.addOnChildAttachStateChangeListener(listener);
-    }).map(view -> recyclerView.getChildAdapterPosition(view));
+  private Observable<MovieViewModel> streamItemClicks() {
+    return adapter.itemClicks().map(position -> movies.get(position))
+        .doOnNext(clicked -> Timber.w("clicked: %s", clicked));
   }
 
   @Override
